@@ -58,8 +58,8 @@ C_sim = eye(6);
 
 %---LQR design---
 % weighting matrices
-q = [10 10 10 1 1 1];
-r = [0.1 0.1 0.1];
+q = [100 100 100 10 10 10];
+r = [0.01 0.01 0.01];
 Qlqr = diag(q);
 Rlqr = diag(r);
 % LQR gains

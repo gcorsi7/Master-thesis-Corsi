@@ -6,7 +6,7 @@
 % the parameter n, which is the percentage of acceleration time t_acc
 % with respect to the total time t_tot
 
-n = 0.5;
+n = 0.35;
 theta_tot = 270*pi/180; % radians;
 t_tot = 20;             % seconds;
 

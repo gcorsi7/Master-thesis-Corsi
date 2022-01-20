@@ -20,25 +20,25 @@ for i = 1:length(n)
 end
 
 figure(1)
-plot(n,T,'linewidth',1.8)
+plot(n,T,'color','#A2142F','linewidth',1.8)
 grid on;
-title('Torque vs n')
-xlabel('n');
-ylabel('T');
+title('Torque vs n','Interpreter','Latex','FontSize',18)
+xlabel('n','Interpreter','Latex','FontSize',18);
+ylabel('T','Interpreter','Latex','FontSize',18);
 
 figure(2)
-plot(n,h_max,'linewidth',1.8)
+plot(n,h_max,'color','#A2142F','linewidth',1.8)
 grid on;
-title('Max angular momentum vs n')
-xlabel('n');
-ylabel('h_{max}');
+title('Max angular momentum vs n','Interpreter','Latex','FontSize',18)
+xlabel('n','Interpreter','Latex','FontSize',18);
+ylabel('$h_{max}$','Interpreter','Latex','FontSize',18);
 
-figure(3)
-plot(T,h_max,'linewidth',1.8)
-grid on;
-title('Torque vs max angular momentum')
-xlabel('T');
-ylabel('h_{max}');
+% figure(3)
+% plot(T,h_max,'color','#A2142F','linewidth',1.8)
+% grid on;
+% title('Torque vs max angular momentum')
+% xlabel('T');
+% ylabel('h_{max}');
 
 
 %% ---Weight/Inertia---
@@ -59,20 +59,19 @@ for i = 1:length(n)
     end
 end
 
-figure(4)
-surf(n, r, W)
-grid on;
-title('Weight vs n and r')
-xlabel('n');
-ylabel('r');
-zlabel('W');
+% figure(4)
+% surf(n, r, W)
+% grid on;
+% title('Weight vs n and r')
+% xlabel('n');
+% ylabel('r');
+% zlabel('W');
 
 figure(5)
-plot(n, J, 'linewidth', 1.8)
+plot(n, J,'color','#A2142F', 'linewidth', 1.8)
 grid on;
-title('Inertia vs n')
-xlabel('n');
-ylabel('Inertia J');
+xlabel('n','Interpreter','Latex','FontSize',18);
+ylabel('Inertia','Interpreter','Latex','FontSize',18);
 
 
 %% ---Power---
@@ -96,25 +95,72 @@ for i = 1:length(n)
 end
 
 figure(6)
-plot(n,P_max_omegafix,'linewidth',1.8)
+plot(n,P_max_omegafix,'color','#A2142F','linewidth',1.8)
 grid on;
 title('Power vs n for fixed values of \omega_w')
-xlabel('n');
-ylabel('P_{max} [W]');
+xlabel('n','Interpreter','Latex','FontSize',18);
+ylabel('$P_{max}$','Interpreter','Latex','FontSize',18);
 
 figure(7)
-plot(n,P_max_inertiafix,'linewidth',1.8)
+plot(n,P_max_inertiafix,'color','#A2142F','linewidth',1.8)
 grid on;
-title('Power vs n for fixed values of inertia')
-xlabel('n');
-ylabel('P_{max} [W]');
+%title('Power vs n for fixed values of inertia')
+ylim([0 5]);
+xlabel('n','Interpreter','Latex','FontSize',18);
+ylabel('$P_{max}$','Interpreter','Latex','FontSize',18);
 
 figure(8)
 plot(t,P,'linewidth',1.8)
 grid on;
 title('Power vs t for n=0.5 (plotted only to check power profile)')
 xlabel('t');
-ylabel('P [W]');
+ylabel('P');
+
+
+%% Acceleration and velocity figures
+nn = [0.2 0.35 0.5];
+for i = 1:length(nn)
+    
+    TT(i) = (theta_tot*I_v)/((nn(i)-nn(i)^2)*t_tot^2); % torque (constant)
+    hh_max(i) = TT(i)*nn(i)*t_tot; % angular momentum (maximum value) 
+    Ddot_theta(i) = TT(i)/I_v;
+    Dot_theta(i) = hh_max(i)/I_v;
+    
+    t1 = nn(i)*t_tot;
+    t2 = (1 - nn(i))*t_tot;
+    t_vector = [0 t1 t2 t_tot];
+    dt = 0.00001;
+    t_vector_acc = [0 t1-dt t1+dt t2-dt t2+dt t_tot];
+
+    figure(9)
+    plot(t_vector, [0 Dot_theta(i) Dot_theta(i) 0],'linewidth',1.8)
+    xl = xline(nn(1)*t_tot,'-','n*t_{tot}');
+    xl.LabelVerticalAlignment = 'top';
+    xl.LabelHorizontalAlignment = 'left';
+    xline(t1);
+    annotation('doublearrow',[0.13 0.285],[0.8 0.8])
+    grid on; hold on;
+    xlabel('Total time','Interpreter','Latex','FontSize',18);
+    ylabel('Velocity','Interpreter','Latex','FontSize',18);
+    legend('n=0.2','','','n=0.35','','','n=0.5')
+    newcolors = {'#A2142F','#7E2F8E','#EDB120'};
+    colororder(newcolors)
+    
+    figure(10)
+    plot(t_vector_acc, [Ddot_theta(i) Ddot_theta(i) 0 0 -Ddot_theta(i) -Ddot_theta(i)],'linewidth',1.8)
+    xl = xline(nn(1)*t_tot,'-','n*t_{tot}');
+    xl.LabelVerticalAlignment = 'middle';
+    xl.LabelHorizontalAlignment = 'left';
+    xline(t1);
+    annotation('doublearrow',[0.13 0.285],[0.45 0.45])
+    grid on; hold on;
+    xlabel('Total time','Interpreter','Latex','FontSize',18);
+    ylabel('Acceleration','Interpreter','Latex','FontSize',18);
+    legend('n=0.2','','','n=0.35','','','n=0.5')
+    newcolors = {'#A2142F','#7E2F8E','#EDB120'};
+    colororder(newcolors)
+    
+end
 
 
 
